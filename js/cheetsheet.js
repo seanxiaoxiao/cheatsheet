@@ -4,7 +4,7 @@
 
     var entries = [];
 
-    var currentEntry = null;
+    var currentEntries = null;
 
     var Entry = function(chars, message, callback) {
         this.chars = chars;
@@ -15,6 +15,12 @@
     }
 
     var starter = Q_MARK_KEYCODE;
+
+    var resetEntries = function() {
+        entries.forEach(function(entry) {
+            entry.index = 0;
+        });
+    }
 
     document.addEventListener('keydown', function(event) {
         if (event.keyCode <= 46) {
@@ -29,28 +35,28 @@
             }      
         }
         else {
-            if (!currentEntry) {
-                for (var i in entries) {
-                    var entry = entries[i];
-                    if (entry != null && entry.chars[0] == String.fromCharCode(event.keyCode)) {
-                        currentEntry = entry;
+            if (!currentEntries) {
+                currentEntries = entries;
+            }
+            tempEntries = [];
+            for (var i in currentEntries) {
+                var entry = currentEntries[i];
+                if (entry != null && entry.chars[entry.index] == String.fromCharCode(event.keyCode)) {
+                    entry.index++;
+                    if (entry.chars.length == entry.index) {
+                        entry.callback();
+                        currentEntries = null;
+                        resetEntries();
                         break;
                     }
+                    tempEntries.push(entry);
                 }
             }
-            if (currentEntry) {
-                if (currentEntry.chars[currentEntry.index] == String.fromCharCode(event.keyCode)) {
-                    currentEntry.index++;
-                    if (currentEntry.chars.length == currentEntry.index) {
-                        currentEntry.callback();
-                        currentEntry.index = 0;
-                        currentEntry = null;
-                    }
-                }
-                else {
-                    currentEntry.index = 0;
-                    currentEntry = null;
-                }
+            if (tempEntries.length == 0) {
+                resetEntries();
+            }
+            else {
+                currentEntries = tempEntries;
             }
         }
     });
