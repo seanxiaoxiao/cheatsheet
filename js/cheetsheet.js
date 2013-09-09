@@ -20,7 +20,6 @@
         if (event.keyCode <= 46) {
             return;
         }
-        console.log(event.keyCode);
         if (event.keyCode == starter) {
             if (document.getElementById("cheetsheet")) {
                 cheetsheet.dismissCheetSheet();
@@ -40,17 +39,17 @@
                 }
             }
             if (currentEntry) {
-                if (entry.chars[entry.index] == String.fromCharCode(event.keyCode)) {
-                    entry.index++;
-                    if (entry.chars.length == entry.index) {
-                        entry.callback();
+                if (currentEntry.chars[currentEntry.index] == String.fromCharCode(event.keyCode)) {
+                    currentEntry.index++;
+                    if (currentEntry.chars.length == currentEntry.index) {
+                        currentEntry.callback();
+                        currentEntry.index = 0;
                         currentEntry = null;
-                        entry.index = 0;
                     }
                 }
                 else {
+                    currentEntry.index = 0;
                     currentEntry = null;
-                    entry.index = 0;
                 }
             }
         }
@@ -77,10 +76,11 @@
             document.getElementsByTagName("body")[0].appendChild(cheetsheetDiv);
 
             var count = 0;
+            var cheetsheetRow;
             entries.forEach(function(entry) {
                 if (entry != null) {
                     if (count == 0) {
-                        var cheetsheetRow = document.createElement("div");
+                        cheetsheetRow = document.createElement("div");
                         cheetsheetRow.setAttribute("class", "cheetsheet-row");
                         cheetsheetDiv.appendChild(cheetsheetRow);
                     }
@@ -92,13 +92,18 @@
                         shortcuts += entry.chars[i] + "+";
                     }
                     shortcuts = shortcuts.substring(0, shortcuts.length - 1);
+                    shortcuts = shortcuts + ":";
                     var shortCutCell = document.createElement("span");
                     shortCutCell.setAttribute("class", "cheetsheet-shortcut");
+                    shortCutCell.innerHTML = shortcuts;
                     cheetsheetCell.appendChild(shortCutCell);
 
                     var messageCell = document.createElement("span");
-                    messageCell.setAttribute("class", "cheetsheet-span");
+                    messageCell.setAttribute("class", "cheetsheet-message");
+                    messageCell.innerHTML = entry.message;
                     cheetsheetCell.appendChild(messageCell);
+
+                    cheetsheetRow.appendChild(cheetsheetCell);
 
                     if (count == 2) {
                         count = 0;
