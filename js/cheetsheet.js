@@ -17,6 +17,9 @@
     var starter = Q_MARK_KEYCODE;
 
     document.addEventListener('keydown', function(event) {
+        if (event.keyCode <= 46) {
+            return;
+        }
         if (event.keyCode == starter) {
             if (document.getElementById("cheetsheet")) {
                 cheetsheet.dismissCheetSheet();
@@ -28,7 +31,8 @@
         }
         else {
             if (!currentEntry) {
-                for (entry in entries) {
+                for (var i in entries) {
+                    var entry = entries[i];
                     if (entry != null && entry.chars[0].charCodeAt(0) == keyCode) {
                         currentEntry = entry;
                         break;
@@ -68,9 +72,10 @@
         showCheetSheet: function() {
             var cheetsheetDiv = document.createElement("div");
             cheetsheetDiv.setAttribute("id", "cheetsheet");
+            document.getElementsByTagName("body")[0].appendChild(cheetsheetDiv);
 
             var count = 0;
-            for (entry in entries) {
+            entries.forEach(function(entry) {
                 if (entry != null) {
                     if (count == 0) {
                         var cheetsheetRow = document.createElement("div");
@@ -81,11 +86,11 @@
                     var cheetsheetCell = document.createElement("div");
                     cheetsheetCell.setAttribute("class", "cheetsheet-cell");
                     var shortcuts = "";
-                    for (word in entry.chars) {
+                    entry.chars.forEach(function(word) {
                         shortcuts += word + "+";
-                    }
+                    });
                     shortcuts = shortcuts.substring(0, shortcuts.length - 1);
-                    var shortCutsCell = document.createElement("span");
+                    var shortCutCell = document.createElement("span");
                     shortCutCell.setAttribute("class", "cheetsheet-shortcut");
                     cheetsheetCell.appendChild(shortCutCell);
 
@@ -102,7 +107,7 @@
                     cheetsheetSplit.setAttribute("class", "cheetsheet-spilt");
                     cheetsheetDiv.appendChild(cheetsheetSplit);
                 }
-            }
+            });
         },
 
         dismissCheetSheet: function() {
