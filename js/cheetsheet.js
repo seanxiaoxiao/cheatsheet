@@ -20,31 +20,32 @@
         if (event.keyCode <= 46) {
             return;
         }
+        console.log(event.keyCode);
         if (event.keyCode == starter) {
             if (document.getElementById("cheetsheet")) {
                 cheetsheet.dismissCheetSheet();
             }
             else {
                 cheetsheet.showCheetSheet();    
-            }
-            
+            }      
         }
         else {
             if (!currentEntry) {
                 for (var i in entries) {
                     var entry = entries[i];
-                    if (entry != null && entry.chars[0].charCodeAt(0) == keyCode) {
+                    if (entry != null && entry.chars[0] == String.fromCharCode(event.keyCode)) {
                         currentEntry = entry;
                         break;
                     }
                 }
-                return;
             }
             if (currentEntry) {
-                if (entry.chars[index].charCodeAt(0) == keyCode) {
+                if (entry.chars[entry.index] == String.fromCharCode(event.keyCode)) {
                     entry.index++;
                     if (entry.chars.length == entry.index) {
                         entry.callback();
+                        currentEntry = null;
+                        entry.index = 0;
                     }
                 }
                 else {
@@ -62,6 +63,7 @@
         },
 
         addHandler: function(shortcuts, message, callback) {
+            shortcuts = shortcuts.toUpperCase();
             entries.push(new Entry(shortcuts, message, callback));
         },
 
@@ -86,9 +88,9 @@
                     var cheetsheetCell = document.createElement("div");
                     cheetsheetCell.setAttribute("class", "cheetsheet-cell");
                     var shortcuts = "";
-                    entry.chars.forEach(function(word) {
-                        shortcuts += word + "+";
-                    });
+                    for (var i in entry.chars) {
+                        shortcuts += entry.chars[i] + "+";
+                    }
                     shortcuts = shortcuts.substring(0, shortcuts.length - 1);
                     var shortCutCell = document.createElement("span");
                     shortCutCell.setAttribute("class", "cheetsheet-shortcut");
