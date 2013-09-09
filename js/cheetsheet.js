@@ -16,7 +16,7 @@
 
     var starter = Q_MARK_KEYCODE;
 
-    document.addEventListener('keydownn', function(event) {
+    document.addEventListener('keydown', function(event) {
         if (event.keyCode == starter) {
             if (document.getElementById("cheetsheet")) {
                 cheetsheet.dismissCheetSheet();
@@ -106,7 +106,8 @@
         },
 
         dismissCheetSheet: function() {
-            
+            var cheetsheet = document.getElementById("cheetsheet");
+            cheetsheet.parentNode.removeChild(cheetsheet);
         }
     
     };

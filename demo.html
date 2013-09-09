@@ -1,7 +1,12 @@
 <html>
-	<head>
-	</head>
-	<body>
-		<script type="text/javascript" src="js/cheetsheet.js"></script>
-	</body>
+    <head>
+    </head>
+    <body>
+        <script type="text/javascript" src="js/cheetsheet.js"></script>
+        <script type="text/javascript">
+            cheetsheet.addHandler("h", "Print Hello World", function() {
+                console.log("Hello World");
+            });
+        </script>
+    </body>
 </html>
