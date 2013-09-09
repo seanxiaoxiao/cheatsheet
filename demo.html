@@ -3,22 +3,28 @@
         <link rel="stylesheet" type="text/css" href="css/cheetsheet.css">
     </head>
     <body>
+        <div>
+            <p>
+                Please press '?' to show the cheat sheet.
+            </p>
+            <textarea id="text-area" cols='100' rows='30'></textarea>
+        </div>
         <script type="text/javascript" src="js/cheetsheet.js"></script>
         <script type="text/javascript">
-            cheetsheet.addHandler("h", "Print Hello World", function() {
-                console.log("Hello World");
+            cheetsheet.addHandler("h", "Hide the textarea", function() {
+                document.getElementById("text-area").setAttribute("style", "display: none");
             });
 
-            cheetsheet.addHandler("m", "Print M", function() {
-                console.log("M");
+            cheetsheet.addHandler("s", "Show the textarea", function() {
+                document.getElementById("text-area").setAttribute("style", "");
             });
 
-            cheetsheet.addHandler("sh", "Print SH", function() {
-                console.log("SH");
+            cheetsheet.addHandler("PH", "Print Hello", function() {
+                document.getElementById("text-area").value += "Hello\n";
             });
 
-            cheetsheet.addHandler("sp", "Print SP", function() {
-                console.log("SP");
+            cheetsheet.addHandler("PW", "Print World", function() {
+                document.getElementById("text-area").value += "World\n";
             });
         </script>
     </body>
