@@ -84,7 +84,6 @@
         if (event.keyCode <= 46) {
             return;
         }
-        console.log(event);
         if (event.keyCode == starter) {
             if (document.getElementById("cheetsheet")) {
                 cheetsheet.dismissCheetSheet();
@@ -139,16 +138,13 @@
 
         addGroup: function(group) {
             var newGroup = new Group(group.name);
+            groups.push(newGroup);
             if (group.handlers) {
                 group.handlers.forEach(function(handler) {
                     var handlerInstance = new Entry(handler);
-                    _addHandler(handlerInstance, group);
+                    _addHandler(handlerInstance, newGroup);
                 });
             }
-        },
-
-        addSplit: function() {
-            entries.push(null);
         },
 
         showCheetSheet: function() {
@@ -158,38 +154,44 @@
 
             var count = 0;
             var cheetsheetRow;
-            entries.forEach(function(entry) {
-                if (entry != null) {
-                    if (count == 0) {
-                        cheetsheetRow = document.createElement("div");
-                        cheetsheetRow.setAttribute("class", "cheetsheet-row");
-                        cheetsheetDiv.appendChild(cheetsheetRow);
-                    }
-                    count++;
-                    var cheetsheetCell = document.createElement("div");
-                    cheetsheetCell.setAttribute("class", "cheetsheet-cell");
-                    
-                    var shortCutCell = document.createElement("span");
-                    shortCutCell.setAttribute("class", "cheetsheet-shortcut");
-                    shortCutCell.innerHTML = entry.shortcuts() + ":";
-                    cheetsheetCell.appendChild(shortCutCell);
-
-                    var messageCell = document.createElement("span");
-                    messageCell.setAttribute("class", "cheetsheet-message");
-                    messageCell.innerHTML = entry.message;
-                    cheetsheetCell.appendChild(messageCell);
-
-                    cheetsheetRow.appendChild(cheetsheetCell);
-
-                    if (count == 2) {
-                        count = 0;
-                    }
+            groups.forEach(function(group) {
+                if (group.name) {
+                    var groupTitle = document.createElement("div");
+                    groupTitle.setAttribute("class", "group-title");
+                    groupTitle.innerHTML = group.name;
+                    cheetsheetDiv.appendChild(groupTitle);
                 }
-                else {
-                    var cheetsheetSplit = document.createElement("div");
-                    cheetsheetSplit.setAttribute("class", "cheetsheet-spilt");
-                    cheetsheetDiv.appendChild(cheetsheetSplit);
-                }
+                group.entries.forEach(function(entry) {
+                    if (entry) {
+                        if (count == 0) {
+                            cheetsheetRow = document.createElement("div");
+                            cheetsheetRow.setAttribute("class", "cheetsheet-row");
+                            cheetsheetDiv.appendChild(cheetsheetRow);
+                        }
+                        count++;
+                        var cheetsheetCell = document.createElement("div");
+                        cheetsheetCell.setAttribute("class", "cheetsheet-cell");
+                        
+                        var shortCutCell = document.createElement("span");
+                        shortCutCell.setAttribute("class", "cheetsheet-shortcut");
+                        shortCutCell.innerHTML = entry.shortcuts() + ":";
+                        cheetsheetCell.appendChild(shortCutCell);
+
+                        var messageCell = document.createElement("span");
+                        messageCell.setAttribute("class", "cheetsheet-message");
+                        messageCell.innerHTML = entry.message;
+                        cheetsheetCell.appendChild(messageCell);
+
+                        cheetsheetRow.appendChild(cheetsheetCell);
+
+                        if (count == 2) {
+                            count = 0;
+                        }
+                    }
+                });
+                var groupTail = document.createElement("div");
+                groupTail.setAttribute("class", "group-tail");
+                cheetsheetDiv.appendChild(groupTail);
             });
         },
 

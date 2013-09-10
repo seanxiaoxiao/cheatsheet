@@ -5,47 +5,64 @@
     <body>
         <div>
             <p>
-                Please press '?' to show the cheat sheet.
+                Please toggle '?' to show/hide the cheat sheet.
             </p>
             <textarea id="text-area" cols='100' rows='30'></textarea>
         </div>
         <script type="text/javascript" src="js/cheetsheet.js"></script>
         <script type="text/javascript">
-            cheetsheet.addHandler({
-                chars: "h",
-                ctrl: true,
-                message: "Hide the textarea",
-                callback: function() {
-                    document.getElementById("text-area").setAttribute("style", "display: none");
-                }
+            cheetsheet.addGroup({
+                name: "Show/Hide Textarea",
+                handlers: [{
+                    chars: "h",
+                    ctrl: true,
+                    message: "Hide the textarea",
+                    callback: function() {
+                        document.getElementById("text-area").setAttribute("style", "display: none");
+                    }
+                }, {
+                    chars: "s",
+                    alt: true,
+                    message: "Show the textarea", 
+                    callback: function() {
+                        document.getElementById("text-area").setAttribute("style", "");
+                    }
+                }]
             });
-
-            cheetsheet.addHandler({
-                chars: "s",
-                alt: true,
-                message: "Show the textarea", 
-                callback: function() {
-                    document.getElementById("text-area").setAttribute("style", "");
-                }
-            });
-
-            cheetsheet.addHandler({
-                chars: "PH",
-                shift: true,
-                message: "Print Hello",
-                callback: function() {
-                    document.getElementById("text-area").value += "Hello\n";
-                }
-            });
-
-            cheetsheet.addHandler({
-                chars: "PW",
-                ctrl: true,
-                shift: true,
-                message: "Print World",
-                callback: function() {
-                    document.getElementById("text-area").value += "World\n";
-                }
+            cheetsheet.addGroup({
+                name: "Print Text",
+                handlers: [{
+                    chars: "ph",
+                    message: "Print Hello",
+                    callback: function() {
+                        document.getElementById("text-area").value += "Hello\n";
+                    }
+                }, {
+                    chars: "pw",
+                    message: "Print World",
+                    callback: function() {
+                        document.getElementById("text-area").value += "World\n";
+                    }
+                }, {
+                    chars: "pf",
+                    message: "Print Foo",
+                    callback: function() {
+                        document.getElementById("text-area").value += "Foo\n";
+                    }
+                }, {
+                    chars: "pb",
+                    message: "Print Bar",
+                    callback: function() {
+                        document.getElementById("text-area").value += "Bar\n";
+                    }
+                }, {
+                    chars: "k",
+                    ctrl: true,
+                    message: "Clear All",
+                    callback: function() {
+                        document.getElementById("text-area").value = "";
+                    }
+                }]
             });
         </script>
     </body>
