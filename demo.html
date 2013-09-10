@@ -11,20 +11,41 @@
         </div>
         <script type="text/javascript" src="js/cheetsheet.js"></script>
         <script type="text/javascript">
-            cheetsheet.addHandler("h", "Hide the textarea", function() {
-                document.getElementById("text-area").setAttribute("style", "display: none");
+            cheetsheet.addHandler({
+                chars: "h",
+                ctrl: true,
+                message: "Hide the textarea",
+                callback: function() {
+                    document.getElementById("text-area").setAttribute("style", "display: none");
+                }
             });
 
-            cheetsheet.addHandler("s", "Show the textarea", function() {
-                document.getElementById("text-area").setAttribute("style", "");
+            cheetsheet.addHandler({
+                chars: "s",
+                alt: true,
+                message: "Show the textarea", 
+                callback: function() {
+                    document.getElementById("text-area").setAttribute("style", "");
+                }
             });
 
-            cheetsheet.addHandler("PH", "Print Hello", function() {
-                document.getElementById("text-area").value += "Hello\n";
+            cheetsheet.addHandler({
+                chars: "PH",
+                shift: true,
+                message: "Print Hello",
+                callback: function() {
+                    document.getElementById("text-area").value += "Hello\n";
+                }
             });
 
-            cheetsheet.addHandler("PW", "Print World", function() {
-                document.getElementById("text-area").value += "World\n";
+            cheetsheet.addHandler({
+                chars: "PW",
+                ctrl: true,
+                shift: true,
+                message: "Print World",
+                callback: function() {
+                    document.getElementById("text-area").value += "World\n";
+                }
             });
         </script>
     </body>

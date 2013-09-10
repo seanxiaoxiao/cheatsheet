@@ -4,14 +4,67 @@
 
     var entries = [];
 
+    var groups = [];
+
     var currentEntries = null;
 
-    var Entry = function(chars, message, callback) {
-        this.chars = chars;
-        this.callback = callback;
-        this.index = 0;
-        this.message = message;
+    var Group = function(name) {
+        this.name = name;
+        this.entries = [];
         return this;
+    };
+
+    var defaultGroup = new Group("");
+
+    groups.push(defaultGroup);
+
+    var Entry = function(handler) {
+        this.chars = handler.chars.toUpperCase();
+        this.callback = handler.callback;
+        this.message = handler.message;
+        this.ctrl = handler.ctrl;
+        this.alt = handler.alt;
+        this.shift = handler.shift;
+        this.index = 0;
+        return this;
+    }
+
+    Entry.prototype = {
+
+        shortcuts: function() {
+            var shortcuts = "";
+            if (this.ctrl || this.shift || this.alt) {
+                if (this.ctrl) {
+                    shortcuts += "&ltctrl&gt + ";
+                }
+                if (this.shift) {
+                    shortcuts += "&ltshift&gt + ";
+                }
+                if (this.alt) {
+                    shortcuts += "&ltalt&gt + ";
+                }
+            }
+            var chars = this.chars.toLowerCase();
+            for (var i in chars) {
+                shortcuts += chars[i] + " + ";
+            }
+            if (shortcuts.length >= 2) {
+                return shortcuts.substring(0, shortcuts.length - 2);
+            }
+        },
+
+        matchKeycode: function(keyContext) {
+            if (this.ctrl && !keyContext.ctrl) {
+                return false;
+            }
+            if (this.alt && !keyContext.alt) {
+                return false;
+            }
+            if (this.shift && !keyContext.shift) {
+                return false;
+            }
+            return this.chars[this.index] == String.fromCharCode(keyContext.keyCode);
+        }
     }
 
     var starter = Q_MARK_KEYCODE;
@@ -22,10 +75,16 @@
         });
     }
 
+    var _addHandler = function(handler, group) {
+        group.entries.push(handler);
+        entries.push(handler);
+    };
+
     document.addEventListener('keydown', function(event) {
         if (event.keyCode <= 46) {
             return;
         }
+        console.log(event);
         if (event.keyCode == starter) {
             if (document.getElementById("cheetsheet")) {
                 cheetsheet.dismissCheetSheet();
@@ -39,9 +98,15 @@
                 currentEntries = entries;
             }
             tempEntries = [];
+            var keyContext = {
+                ctrl: event.ctrlKey,
+                shift: event.shiftKey,
+                alt: event.altKey,
+                keyCode: event.keyCode
+            }
             for (var i in currentEntries) {
                 var entry = currentEntries[i];
-                if (entry != null && entry.chars[entry.index] == String.fromCharCode(event.keyCode)) {
+                if (entry.matchKeycode(keyContext)) {
                     entry.index++;
                     if (entry.chars.length == entry.index) {
                         entry.callback();
@@ -67,9 +132,19 @@
             starter = key.charCodeAt(0);
         },
 
-        addHandler: function(shortcuts, message, callback) {
-            shortcuts = shortcuts.toUpperCase();
-            entries.push(new Entry(shortcuts, message, callback));
+        addHandler: function(handler) {
+            var handlerInstance = new Entry(handler);
+            _addHandler(handlerInstance, defaultGroup);
+        },
+
+        addGroup: function(group) {
+            var newGroup = new Group(group.name);
+            if (group.handlers) {
+                group.handlers.forEach(function(handler) {
+                    var handlerInstance = new Entry(handler);
+                    _addHandler(handlerInstance, group);
+                });
+            }
         },
 
         addSplit: function() {
@@ -93,15 +168,10 @@
                     count++;
                     var cheetsheetCell = document.createElement("div");
                     cheetsheetCell.setAttribute("class", "cheetsheet-cell");
-                    var shortcuts = "";
-                    for (var i in entry.chars) {
-                        shortcuts += entry.chars[i] + "+";
-                    }
-                    shortcuts = shortcuts.substring(0, shortcuts.length - 1);
-                    shortcuts = shortcuts + ":";
+                    
                     var shortCutCell = document.createElement("span");
                     shortCutCell.setAttribute("class", "cheetsheet-shortcut");
-                    shortCutCell.innerHTML = shortcuts;
+                    shortCutCell.innerHTML = entry.shortcuts() + ":";
                     cheetsheetCell.appendChild(shortCutCell);
 
                     var messageCell = document.createElement("span");
