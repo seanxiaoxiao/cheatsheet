@@ -16,6 +16,8 @@ This component provides a gmail look and feel cheatsheet, in which you can bind 
 
 ##How to Start
 
+To begin, you should import cheatsheet.js and cheatsheet.css to your web page.
+
 ####Add Handler
 
 ```
