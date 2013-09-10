@@ -155,12 +155,11 @@
             var count = 0;
             var cheetsheetRow;
             groups.forEach(function(group) {
-                if (group.name) {
-                    var groupTitle = document.createElement("div");
-                    groupTitle.setAttribute("class", "group-title");
-                    groupTitle.innerHTML = group.name;
-                    cheetsheetDiv.appendChild(groupTitle);
-                }
+                var groupTitle = document.createElement("div");
+                groupTitle.setAttribute("class", "group-title");
+                groupTitle.innerHTML = group.name;
+                cheetsheetDiv.appendChild(groupTitle);
+
                 group.entries.forEach(function(entry) {
                     if (entry) {
                         if (count == 0) {
