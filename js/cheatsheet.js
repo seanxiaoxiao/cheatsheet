@@ -10,6 +10,8 @@
 
     var enabled = true;
 
+    var eventReceiver = document;
+
     var Group = function(name) {
         this.name = name;
         this.entries = [];
@@ -82,14 +84,24 @@
         entries.push(handler);
     };
 
-    document.addEventListener('keydown', function(event) {
+    var eventHandler = function(event) {
+        var keyContext = {
+            ctrl: event.ctrlKey,
+            shift: event.shiftKey,
+            alt: event.altKey,
+            keyCode: event.keyCode
+        }
+        callback(keyContext);
+    };
+
+    var callback = function(keyContext) {
         if (!enabled) {
             return;
         }
-        if (event.keyCode <= 46) {
+        if (keyContext.keyCode <= 46) {
             return;
         }
-        if (event.keyCode == starter) {
+        if (keyContext.keyCode == starter) {
             if (document.getElementById("cheetsheet")) {
                 cheetsheet.dismissCheetSheet();
             }
@@ -102,12 +114,7 @@
                 currentEntries = entries;
             }
             tempEntries = [];
-            var keyContext = {
-                ctrl: event.ctrlKey,
-                shift: event.shiftKey,
-                alt: event.altKey,
-                keyCode: event.keyCode
-            }
+            
             for (var i in currentEntries) {
                 var entry = currentEntries[i];
                 if (entry.matchKeycode(keyContext)) {
@@ -128,7 +135,11 @@
                 currentEntries = tempEntries;
             }
         }
-    });
+    };
+
+    var bindEvent = function() {
+        eventReceiver.addEventListener('keydown', eventHandler);
+    }
 
     window.cheetsheet = {
 
@@ -207,10 +218,17 @@
         dismissCheetSheet: function() {
             var cheetsheet = document.getElementById("cheetsheet");
             cheetsheet.parentNode.removeChild(cheetsheet);
+        },
+
+        bindReceiver: function(dom) {
+            eventReceiver.removeEventListener('keydown', eventHandler);
+            eventReceiver = dom;
+            bindEvent();
         }
     
     };
 
     var cheetsheet = window.cheetsheet;
+    bindEvent();
     
 }(this));
