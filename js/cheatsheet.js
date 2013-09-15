@@ -2,6 +2,8 @@
 
     var Q_MARK_KEYCODE = 191;
 
+    var ESC_KEYCODE = 27;
+
     var entries = [];
 
     var groups = [];
@@ -230,5 +232,11 @@
 
     var cheetsheet = window.cheetsheet;
     bindEvent();
+
+    document.addEventListener('keydown', function(event) {
+        if (event.keyCode == ESC_KEYCODE) {
+            cheetsheet.dismissCheetSheet();
+        }
+    });
     
 }(this));
