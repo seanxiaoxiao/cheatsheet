@@ -11,6 +11,7 @@
         </div>
         <script type="text/javascript" src="js/cheatsheet.js"></script>
         <script type="text/javascript">
+            cheetsheet.disable();
             cheetsheet.addGroup({
                 name: "Show/Hide Textarea",
                 handlers: [{
@@ -56,8 +57,9 @@
                         document.getElementById("text-area").value += "Bar\n";
                     }
                 }, {
-                    chars: "k",
+                    chars: "kc",
                     ctrl: true,
+                    shift: true,
                     message: "Clear All",
                     callback: function() {
                         document.getElementById("text-area").value = "";

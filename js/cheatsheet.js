@@ -8,6 +8,8 @@
 
     var currentEntries = null;
 
+    var enabled = true;
+
     var Group = function(name) {
         this.name = name;
         this.entries = [];
@@ -81,6 +83,9 @@
     };
 
     document.addEventListener('keydown', function(event) {
+        if (!enabled) {
+            return;
+        }
         if (event.keyCode <= 46) {
             return;
         }
@@ -127,8 +132,12 @@
 
     window.cheetsheet = {
 
-        changeStarter: function(key) {
-            starter = key.charCodeAt(0);
+        enable: function() {
+            enabled = true;
+        },
+
+        disable: function() {
+            enabled = false;
         },
 
         addHandler: function(handler) {
